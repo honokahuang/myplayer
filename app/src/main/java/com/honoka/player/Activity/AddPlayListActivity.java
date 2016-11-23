@@ -17,7 +17,7 @@ public class AddPlayListActivity extends BaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addplaylist);
-        setbar("创建播放列表","");
+        setbar("创建播放列表","   ");
         final TitleBar titleBar = (TitleBar) findViewById(R.id.title_bar);
         titleBar.setBackgroundColor(Color.parseColor("#CD2626"));
 
