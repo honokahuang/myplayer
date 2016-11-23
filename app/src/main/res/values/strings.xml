@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">音乐播放器</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_localmusiclist">本地音乐</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_main_home">音乐播放器</string>
+
+</resources>
