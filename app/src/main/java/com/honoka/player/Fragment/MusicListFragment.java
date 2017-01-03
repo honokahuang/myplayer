@@ -37,11 +37,10 @@ public class MusicListFragment extends ListFragment {
     private ListView mplaylist; // 音乐列表
     private List<PlayListInfo> playListInfoLists = null;
     PlayListAdapter listAdapter; // 改为自定义列表适配器
-    public static MusicListFragment newInstance(int i){
+   /* public static MusicListFragment newInstance(int i){
         MusicListFragment fragment=new MusicListFragment();
-
         return fragment;
-    }
+    }*/
 
     @Nullable
     @Override
