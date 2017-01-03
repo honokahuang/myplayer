@@ -14,7 +14,6 @@ import com.honoka.player.Domain.LrcContent;
 
 
 /**
- * 2013/6/1
  *	处理歌词的类
  */
 public class LrcProcess {
