@@ -505,6 +505,7 @@ public class PlayService extends Service{
         notify.contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
         mNotificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(200, notify);
+
     }
     public final static String INTENT_BUTTONID_TAG = "ButtonId";
     /** 上一首 按钮点击 ID */

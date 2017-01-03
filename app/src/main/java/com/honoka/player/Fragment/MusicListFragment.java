@@ -96,10 +96,16 @@ public class MusicListFragment extends ListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PlayListInfo playListInfo= playListInfoLists.get(position);
                 Intent intent = new Intent (getActivity(),PlayListInfoActivity.class);
-                intent.putExtra("playlist_id",String.valueOf(playListInfo.getPlaylistid()));
-                intent.putExtra("playlist_name",playListInfo.getPlaylistname());
+/*                intent.putExtra("playlist_id",String.valueOf(playListInfo.getPlaylistid()));
+                intent.putExtra("playlist_name",playListInfo.getPlaylistname());*/
                 startActivity(intent);
 
+            }
+        });
+        mplaylist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return false;
             }
         });
 
