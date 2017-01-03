@@ -8,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import com.honoka.player.Activity.AddPlayListActivity;
 import com.honoka.player.Activity.AlbumListActivity;
 import com.honoka.player.Activity.ArtistListActivity;
 import com.honoka.player.Activity.LocalListActivity;
+import com.honoka.player.Activity.PlayListInfoActivity;
 import com.honoka.player.Adapter.PlayListAdapter;
 import com.honoka.player.Domain.PlayListInfo;
 import com.honoka.player.R;
@@ -89,6 +91,17 @@ public class MusicListFragment extends ListFragment {
         playListInfoLists= MyPlayListUnit.getPlayListInfo(getActivity());
         listAdapter=new PlayListAdapter(this.getActivity(),playListInfoLists);
         mplaylist.setAdapter(listAdapter);
+        mplaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PlayListInfo playListInfo= playListInfoLists.get(position);
+                Intent intent = new Intent (getActivity(),PlayListInfoActivity.class);
+                intent.putExtra("playlist_id",String.valueOf(playListInfo.getPlaylistid()));
+                intent.putExtra("playlist_name",playListInfo.getPlaylistname());
+                startActivity(intent);
+
+            }
+        });
 
 
 

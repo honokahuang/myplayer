@@ -12,6 +12,11 @@ import android.widget.TextView;
 import com.honoka.player.R;
 import com.honoka.player.Domain.Mp3Info;
 import com.honoka.player.Utils.PlayListUnit;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -67,12 +72,22 @@ public class MusicListAdapter extends BaseAdapter {
         }
         mp3Info = mp3Infos.get(position);
         Bitmap bitmap = PlayListUnit.getArtwork(context, mp3Info.getId(),mp3Info.getAlbumId(), true, true);
-        if (bitmap != null){
-            viewHolder.albumImage.setImageBitmap(bitmap);                   //显示专辑封面
-        }
         viewHolder.musicTitle.setText(mp3Info.getTitle());            //显示标题
         viewHolder.musicArtist.setText(mp3Info.getArtist());        //显示艺术家
         viewHolder.musicDuration.setText(PlayListUnit.formatTime(mp3Info.getDuration()));//显示时长
+        DisplayImageOptions options=new DisplayImageOptions.Builder()
+                .showImageOnLoading(android.R.drawable.ic_popup_sync)
+                .showImageForEmptyUri(R.drawable.music5)
+                .cacheInMemory(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .delayBeforeLoading(500)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .displayer(new RoundedBitmapDisplayer(10))
+                .build();
+        if (bitmap != null){
+            String uri=PlayListUnit.Url(mp3Info.getId());
+            ImageLoader.getInstance().displayImage(uri,viewHolder.albumImage,options); //显示专辑封面
+        }
 
         return convertView;
     }

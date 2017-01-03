@@ -203,6 +203,13 @@ public class PlayListUnit {
         return bm;
     }
 
+    public static String Url(long song_id){
+        String albumurl = null;
+        Uri uri = Uri.parse("content://media/external/audio/media/"
+                + song_id + "/albumart");
+        albumurl= String.valueOf(uri);
+        return albumurl;
+    }
     /**
      * 获取专辑封面位图对象
      * @param context

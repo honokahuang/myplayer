@@ -57,7 +57,7 @@ public class PlayListAdapter extends BaseAdapter {
         }
         playListInfo=playListInfos.get(i);
         viewHolder.playlistname.setText(playListInfo.getPlaylistname());
-        viewHolder.playlistadded.setText(playListInfo.getPlaylistadded());
+        /*viewHolder.playlistadded.setText(playListInfo.getPlaylistadded());*/
         return view;
     }
     public class ViewHolder{

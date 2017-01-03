@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.honoka.player.Adapter.MusicListAdapter;
 import com.honoka.player.Base.BaseActivity;
@@ -17,6 +22,8 @@ import com.honoka.player.Domain.Mp3Info;
 import com.honoka.player.R;
 import com.honoka.player.Service.PlayService;
 import com.honoka.player.Utils.PlayListUnit;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -24,7 +31,7 @@ import java.util.List;
  * Created by 41258 on 2016/11/21.
  */
 
-public class LocalListActivity extends BaseActivity {
+public class LocalListActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private ImageView mCollectView;
     private ListView localmusic;//
     private List<Mp3Info> mp3Infos = null;
@@ -32,6 +39,7 @@ public class LocalListActivity extends BaseActivity {
     MusicListAdapter listAdapter; // 改为自定义列表适配器
     private final int from =3;//
     private final String title = "本地音乐";
+    DisplayImageOptions options;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +49,25 @@ public class LocalListActivity extends BaseActivity {
         setbar(title,"");
         final TitleBar titleBar = (TitleBar) findViewById(R.id.title_bar);
         titleBar.setBackgroundColor(Color.parseColor("#CD2626"));
+
+
         mp3Infos = PlayListUnit.getMp3Infos(LocalListActivity.this,from,0); // 获取歌曲对象集合
         listAdapter = new MusicListAdapter(this, mp3Infos);
         localmusic.setAdapter(listAdapter);
+        localmusic.setTextFilterEnabled(true);
         localmusic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 playMusic(i);
             }
         });
+        SearchView search = (SearchView) findViewById(R.id.search_loacl);
+        search.setOnQueryTextListener(this);
+        //为该SearchView组件设置事件监听器
+        search.setSubmitButtonEnabled(false);
+        search.setQueryHint("查找音乐");
+
+
 
 
     }
@@ -78,5 +96,20 @@ public class LocalListActivity extends BaseActivity {
                 startService(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)){
+            //localmusic.clearTextFilter();
+        }else {
+            localmusic.setFilterText(newText);
+        }
+        return false;
     }
 }

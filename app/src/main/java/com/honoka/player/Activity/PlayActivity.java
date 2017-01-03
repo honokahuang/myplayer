@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,7 +17,9 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -547,67 +551,18 @@ public class PlayActivity extends BaseActivity {
         titleBar.setBackgroundColor(Color.parseColor("#00000000"));
     }
 
-    /**
-     * 带按钮的通知栏
-     */
-  /*  public void showButtonNotify(Mp3Info mp3Info){
-        NotificationCompat.Builder mBuilder = new Builder(this);
-        RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.notification_view);
-        Bitmap bm = PlayListUnit.getArtwork(this, mp3Info.getId(), mp3Info.getAlbumId(), true, false);
-        mRemoteViews.setImageViewBitmap(R.id.custom_song_icon, bm);
-        //API3.0 以上的时候显示按钮，否则消失
-        mRemoteViews.setTextViewText(R.id.tv_custom_song_singer, mp3Info.getArtist());
-        mRemoteViews.setTextViewText(R.id.tv_custom_song_name, mp3Info.getTitle());
-         mRemoteViews.setViewVisibility(R.id.ll_custom_button, View.VISIBLE);
-            //
-        if(isPause){
-            mRemoteViews.setImageViewResource(R.id.btn_custom_play, R.drawable.pause_selector);
-        }else{
-            mRemoteViews.setImageViewResource(R.id.btn_custom_play, R.drawable.play_selector);
-        }
-        //点击的事件处理
-        Intent buttonIntent = new Intent(ACTION_BUTTON);
-		*//* 上一首按钮 *//*
-        buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PREV_ID);
-        //这里加了广播，所及INTENT的必须用getBroadcast方法
-        PendingIntent intent_prev = PendingIntent.getBroadcast(this, 1, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mRemoteViews.setOnClickPendingIntent(R.id.btn_custom_prev, intent_prev);
-		*//* 播放/暂停  按钮 *//*
-        buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_PALY_ID);
-        PendingIntent intent_paly = PendingIntent.getBroadcast(this, 2, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mRemoteViews.setOnClickPendingIntent(R.id.btn_custom_play, intent_paly);
-		*//* 下一首 按钮  *//*
-        buttonIntent.putExtra(INTENT_BUTTONID_TAG, BUTTON_NEXT_ID);
-        PendingIntent intent_next = PendingIntent.getBroadcast(this, 3, buttonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mRemoteViews.setOnClickPendingIntent(R.id.btn_custom_next, intent_next);
+    public void addTrackToPlaylist(Context context, String audio_id,
+                                   long playlist_id, int pos) {
+        Uri newuri = MediaStore.Audio.Playlists.Members.getContentUri(
+                "external", playlist_id);
+        ContentResolver resolver = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, pos);
+        values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audio_id);
+        values.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID,
+                playlist_id);
+        resolver.insert(newuri, values);
 
-        mBuilder.setContent(mRemoteViews)
-                .setContentIntent(getDefalutIntent(Notification.FLAG_ONGOING_EVENT))
-                .setWhen(System.currentTimeMillis())// 通知产生的时间，会在通知信息里显示
-                .setTicker("正在播放")
-                .setPriority(Notification.PRIORITY_DEFAULT)// 设置该通知优先级
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.music5);
-        Notification notify = mBuilder.build();
-        notify.flags = Notification.FLAG_ONGOING_EVENT;
-        //会报错，还在找解决思路
-       *//*notify.contentView = mRemoteViews;*//*
-        notify.contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
-        mNotificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotificationManager.notify(200, notify);
     }
-    public final static String INTENT_BUTTONID_TAG = "ButtonId";
-    *//** 上一首 按钮点击 ID *//*
-    public final static int BUTTON_PREV_ID = 1;
-    *//** 播放/暂停 按钮点击 ID *//*
-    public final static int BUTTON_PALY_ID = 2;
-    *//** 下一首 按钮点击 ID *//*
-    public final static int BUTTON_NEXT_ID = 3;
-    *//** Notification管理 *//*
-    public NotificationManager mNotificationManager;
-    public PendingIntent getDefalutIntent(int flags){
-        PendingIntent pendingIntent= PendingIntent.getActivity(this, 1, new Intent(), flags);
-        return pendingIntent;
-    }*/
 
 }
