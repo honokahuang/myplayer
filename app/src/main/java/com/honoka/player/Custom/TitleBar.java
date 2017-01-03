@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import java.util.LinkedList;
 
-
 public class TitleBar extends ViewGroup implements View.OnClickListener {
     private static final int DEFAULT_MAIN_TEXT_SIZE = 18;
     private static final int DEFAULT_SUB_TEXT_SIZE = 12;
