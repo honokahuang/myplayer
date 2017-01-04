@@ -1,5 +1,6 @@
 package com.honoka.player.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -61,5 +62,9 @@ public class ArtistListActivity extends BaseActivity {
             intent.putExtra("artistId",String.valueOf(artistInfo.getArtistId()));
             intent.putExtra("number_of_tracks",String.valueOf(artistInfo.getNumber_of_tracks()));
             startActivity(intent);
+    }
+    public static void StartActivity(Context context){
+        Intent intent=new Intent(context,ArtistListActivity.class);
+        context.startActivity(intent);
     }
 }

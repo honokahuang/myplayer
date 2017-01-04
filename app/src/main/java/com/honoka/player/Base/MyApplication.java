@@ -17,8 +17,8 @@ public class MyApplication extends Application {
         //ImageLoaderConfiguration configuration= ImageLoaderConfiguration.createDefault(this);
         ImageLoaderConfiguration configuration=new ImageLoaderConfiguration.Builder(this)
                 .writeDebugLogs()
-                .memoryCache(new LruMemoryCache(2*1024*1024))//可以通过自己的内存缓存实现
-                .memoryCacheSize(2*1024*1024)//内存缓存的最大值
+                .memoryCache(new LruMemoryCache(3*1024*1024))//可以通过自己的内存缓存实现
+                .memoryCacheSize(3*1024*1024)//内存缓存的最大值
                 .memoryCacheSizePercentage(10)
                 .threadPoolSize(12)
                 .build();

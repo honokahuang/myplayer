@@ -3,6 +3,7 @@ package com.honoka.player.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,5 +47,9 @@ public class AddPlayListActivity extends BaseActivity{
         ContentValues values = new ContentValues(1);
         values.put(MediaStore.Audio.Playlists.NAME, newplaylist);
         resolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
+    }
+    public static void StartAcvivity(Context context){
+        Intent intent = new Intent(context,AddPlayListActivity.class);
+        context.startActivity(intent);
     }
 }

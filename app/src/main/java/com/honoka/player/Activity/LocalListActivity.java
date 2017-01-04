@@ -1,5 +1,6 @@
 package com.honoka.player.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,10 +67,6 @@ public class LocalListActivity extends BaseActivity implements SearchView.OnQuer
         //为该SearchView组件设置事件监听器
         search.setSubmitButtonEnabled(false);
         search.setQueryHint("查找音乐");
-
-
-
-
     }
     public void playMusic(int listPosition) {
         if (mp3Infos != null) {
@@ -111,5 +108,9 @@ public class LocalListActivity extends BaseActivity implements SearchView.OnQuer
             localmusic.setFilterText(newText);
         }
         return false;
+    }
+    public static void StartActivity(Context context){
+        Intent intent = new Intent(context,LocalListActivity.class);
+        context.startActivity(intent);
     }
 }

@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,9 @@ import java.util.List;
 
 public class MusicListFragment extends ListFragment {
     private View view;
-    private ImageButton localmusic;
-    private ImageButton artistmusic;
-    private ImageButton albummusic;
+    private CardView localmusic;
+    private CardView artistmusic;
+    private CardView albummusic;
     private ImageButton addplaylist;
     private ListView mplaylist; // 音乐列表
     private List<PlayListInfo> playListInfoLists = null;
@@ -64,7 +65,6 @@ public class MusicListFragment extends ListFragment {
             mplaylist= (ListView) view.findViewById(android.R.id.list);
             playListInfoLists= MyPlayListUnit.getPlayListInfo(getActivity());
             listAdapter=new PlayListAdapter(this.getActivity(),playListInfoLists);
-            mplaylist.deferNotifyDataSetChanged();
             mplaylist.setAdapter(listAdapter);
         }
     }
@@ -74,38 +74,8 @@ public class MusicListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (view == null){
             view = inflater.inflate(R.layout.fragment_musiclist_main,container,false);
-            localmusic= (ImageButton) view.findViewById(R.id.localmusiclist);
-            artistmusic= (ImageButton) view.findViewById(R.id.artistmusiclist);
-            albummusic= (ImageButton) view.findViewById(R.id.albummusiclist);
-            addplaylist= (ImageButton) view.findViewById(R.id.add_playlist);
-            addplaylist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), AddPlayListActivity.class);
-                    startActivityForResult(intent,0);
-                }
-            });
-            localmusic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), LocalListActivity.class);
-                    startActivity(intent);
-                }
-            });
-            artistmusic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), ArtistListActivity.class);
-                    startActivity(intent);
-                }
-            });
-            albummusic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getActivity(), AlbumListActivity.class);
-                    startActivity(intent);
-                }
-            });
+            initview();
+
         }else {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) {
@@ -128,6 +98,9 @@ public class MusicListFragment extends ListFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         reemove_Playlist(getActivity(),playListInfo.getPlaylistid(),playListInfo.getPlaylistname());
+                        listAdapter=new PlayListAdapter(getActivity(),playListInfoLists);
+                        listAdapter.notifyDataSetInvalidated();
+                        mplaylist.deferNotifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -147,6 +120,37 @@ public class MusicListFragment extends ListFragment {
         return view;
     }
 
+    private void initview() {
+        localmusic= (CardView) view.findViewById(R.id.localmusiclist);
+        artistmusic= (CardView) view.findViewById(R.id.artistmusiclist);
+        albummusic= (CardView) view.findViewById(R.id.albummusiclist);
+        addplaylist= (ImageButton) view.findViewById(R.id.add_playlist);
+        ViewOnClickListener viewOnClickListener = new ViewOnClickListener();
+        addplaylist.setOnClickListener(viewOnClickListener);
+        localmusic.setOnClickListener(viewOnClickListener);
+        artistmusic.setOnClickListener(viewOnClickListener);
+        albummusic.setOnClickListener(viewOnClickListener);
+    }
+    public class ViewOnClickListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.localmusiclist:
+                    LocalListActivity.StartActivity(getActivity());
+                    break;
+                case R.id.artistmusiclist:
+                    ArtistListActivity.StartActivity(getActivity());
+                    break;
+                case R.id.albummusiclist:
+                    AlbumListActivity.StrartActivity(getActivity());
+                    break;
+                case R.id.add_playlist:
+                    AddPlayListActivity.StartAcvivity(getActivity());
+                    break;
+                default:
+            }
+        }
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -157,4 +161,6 @@ public class MusicListFragment extends ListFragment {
         values.put(MediaStore.Audio.Playlists._ID,playlist_id);
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,MediaStore.Audio.Playlists._ID + "='" + playlist_id + "'",null);
     }
+
+
 }

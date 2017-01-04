@@ -61,7 +61,7 @@ public class AlbumInfoActivity extends BaseActivity {
         ImageView albumimage= (ImageView) findViewById(R.id.albuminfo_image);
         final TextView title= (TextView) findViewById(R.id.albuminfo_title);
         TextView albumartist= (TextView) findViewById(R.id.albuminfo_artist);
-        TextView number_of_song= (TextView) findViewById(R.id.number_of_song);
+        TextView number_of_song= (TextView) findViewById(R.id.number_of_song_info);
         if (bm != null){
             albumimage.setImageBitmap(bm);
         }

@@ -1,5 +1,6 @@
 package com.honoka.player.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -56,5 +57,9 @@ public class AlbumListActivity extends BaseActivity {
             }
         });
 
+    }
+    public static void StrartActivity(Context context){
+        Intent intent =new Intent(context,AlbumListActivity.class);
+        context.startActivity(intent);
     }
 }

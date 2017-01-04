@@ -162,7 +162,6 @@ public class PlayService extends Service{
         return super.onStartCommand(intent, flags, startId);
     }
     private void returnActivity(){
-        String tmp_pause1;
         Intent activityintent = new Intent(PlayService.this,PlayActivity.class);
         activityintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activityintent.putExtra("MSG",AppConstant.PlayerMsg.PLAYING_MSG);
@@ -461,11 +460,9 @@ public class PlayService extends Service{
         RemoteViews mRemoteViews = new RemoteViews(getPackageName(), R.layout.notification_view);
         Bitmap bm = PlayListUnit.getArtwork(this, mp3Info.getId(), mp3Info.getAlbumId(), true, true);
         mRemoteViews.setImageViewBitmap(R.id.custom_song_icon, bm);
-        //API3.0 以上的时候显示按钮，否则消失
         mRemoteViews.setTextViewText(R.id.tv_custom_song_singer, mp3Info.getArtist());
         mRemoteViews.setTextViewText(R.id.tv_custom_song_name, mp3Info.getTitle());
         mRemoteViews.setViewVisibility(R.id.ll_custom_button, View.VISIBLE);
-        //
         if(isPause){
             mRemoteViews.setImageViewResource(R.id.btn_custom_play, R.drawable.play_selector);
         }else{
@@ -490,7 +487,6 @@ public class PlayService extends Service{
         buttonIntent.putExtra(INTENT_BUTTONID_TAG,BUTTON_RETURN_ID);
         PendingIntent intent_return= PendingIntent.getBroadcast(this,4,buttonIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         mRemoteViews.setOnClickPendingIntent(R.id.custom_song_icon,intent_return);
-
         mBuilder.setContent(mRemoteViews)
                 .setContentIntent(getDefalutIntent(Notification.FLAG_ONGOING_EVENT))
                 .setWhen(System.currentTimeMillis())// 通知产生的时间，会在通知信息里显示
@@ -500,9 +496,9 @@ public class PlayService extends Service{
                 .setSmallIcon(R.drawable.music5);
         Notification notify = mBuilder.build();
         notify.flags = Notification.FLAG_ONGOING_EVENT;
-        //会报错，还在找解决思路
-       /*notify.contentView = mRemoteViews;*/
-        notify.contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
+        Intent intent = new Intent(this,PlayService.class);
+        intent.putExtra("MSG", AppConstant.PlayerMsg.GET_INFO);
+        notify.contentIntent = PendingIntent.getService(this,0,intent,0);
         mNotificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(200, notify);
 

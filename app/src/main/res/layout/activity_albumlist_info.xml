@@ -59,7 +59,7 @@
                 android:text="number_of_song"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/number_of_song"
+                android:id="@+id/number_of_song_info"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -67,5 +67,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/album_song"/>
+        android:id="@+id/album_song"
+        android:dividerHeight="5dp"/>
 </LinearLayout>

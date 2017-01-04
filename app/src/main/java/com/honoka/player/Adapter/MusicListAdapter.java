@@ -83,7 +83,7 @@ public class MusicListAdapter extends BaseAdapter {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .delayBeforeLoading(500)
                 .imageScaleType(ImageScaleType.EXACTLY)
-                .displayer(new RoundedBitmapDisplayer(10))
+                .displayer(new RoundedBitmapDisplayer(30))
                 .build();
         if (bitmap != null){
             String uri=PlayListUnit.Url(mp3Info.getId());

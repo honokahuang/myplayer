@@ -59,7 +59,6 @@ public class PlayListInfoActivity extends BaseActivity {
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(PlayListInfoActivity.this, ""+position, Toast.LENGTH_SHORT).show();
                 playmusic(position);
             }
         });

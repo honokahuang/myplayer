@@ -475,10 +475,10 @@ public class PlayActivity extends BaseActivity {
     private void getIntentData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        title = bundle.getString("title");
-        artist = bundle.getString("artist");
-        url = bundle.getString("url");
-        from=Integer.valueOf(bundle.getString("from"));
+        title = bundle.getString("title","");
+        artist = bundle.getString("artist","");
+        url = bundle.getString("url","");
+        from=Integer.valueOf(bundle.getString("from",""));
         fromid=Integer.valueOf(bundle.getString("fromid"));
         listPosition = bundle.getInt("listPosition");
         currentTime = bundle.getInt("currentTime");
@@ -620,7 +620,7 @@ public class PlayActivity extends BaseActivity {
                     playListInfoLists.get(i);
                     addTrackToPlaylist(getApplicationContext(),mp3Info.getId(),playListInfoLists.get(i).getPlaylistid(),0);
                     dialog.cancel();
-
+                    Toast.makeText(PlayActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
                 }
             }
         });

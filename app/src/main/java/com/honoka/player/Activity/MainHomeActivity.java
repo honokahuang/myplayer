@@ -1,5 +1,6 @@
 package com.honoka.player.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.honoka.player.Base.BaseActivity;
 import com.honoka.player.Domain.AppConstant;
+import com.honoka.player.Fragment.FindFragment;
 import com.honoka.player.Fragment.MusicListFragment;
 import com.honoka.player.R;
 import com.honoka.player.Service.PlayService;
@@ -107,6 +109,11 @@ public class MainHomeActivity extends BaseActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    public static void ActivityStart(Context context) {
+        Intent intent = new Intent (context,MainHomeActivity.class);
+        context.startActivity(intent);
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -168,7 +175,7 @@ public class MainHomeActivity extends BaseActivity{
                 case 0:
                     return new MusicListFragment();
                 case 1:
-                    return PlaceholderFragment.newInstance(position + 1);
+                    return new FindFragment();
                 case 2:
                     return PlaceholderFragment.newInstance(position + 1);
             }
