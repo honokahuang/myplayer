@@ -9,16 +9,22 @@
         android:layout_width="50.0dip"
         android:layout_height="50.0dip"
         app:srcCompat="@drawable/musiclist"
-        android:id="@+id/playlist_image" />
+        android:id="@+id/playlist_image"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <TextView
-        android:text="playlistadded"
+        android:text=" "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/playlist_image"
         android:layout_toEndOf="@+id/playlist_image"
         android:layout_marginStart="20dp"
-        android:id="@+id/playlistadded" />
+        android:id="@+id/playlistadded"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
     <TextView
         android:text="playlisttitle"
@@ -28,6 +34,9 @@
         android:id="@+id/playlisttitle"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/playlist_image"
-        android:layout_marginStart="10dp" />
+        android:layout_marginStart="10dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
 </RelativeLayout>

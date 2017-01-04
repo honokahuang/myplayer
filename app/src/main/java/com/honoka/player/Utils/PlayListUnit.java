@@ -4,7 +4,10 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,21 +41,52 @@ public class PlayListUnit {
         switch (from){
             case 1:
                 search=MediaStore.Audio.Media.ALBUM_ID + "='" + fromid + "'";
+                playList = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 break;
             case 2:
                 search=MediaStore.Audio.Media.ARTIST_ID + "='" + fromid + "'";
+                playList = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 break;
             case 3:
                 search=searchfrom;
+                playList = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 break;
             case 4:
+                search=null;
                 playList=MediaStore.Audio.Playlists.Members.getContentUri("external",fromid);
                 break;
         }
         Cursor cursor = context.getContentResolver().query(playList, null,search, null, null);
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
         if (from == 4){
-
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToNext();
+                Mp3Info mp3Info = new Mp3Info();
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members._ID));	//音乐id
+                String title = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.TITLE))); // 音乐标题
+                String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.ARTIST)); // 艺术家
+                long artistId=cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.ARTIST_ID));//艺术家ID
+                String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.ALBUM));	//专辑
+                String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.DISPLAY_NAME));
+                long albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.ALBUM_ID));
+                long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.DURATION)); // 时长
+                long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.SIZE)); // 文件大小
+                String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.DATA)); // 文件路径
+                int isMusic = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.IS_MUSIC)); // 是否为音乐
+                if (isMusic != 0) { // 只把音乐添加到集合当中
+                    mp3Info.setId(id);
+                    mp3Info.setTitle(title);
+                    mp3Info.setArtist(artist);
+                    mp3Info.setArtistId(artistId);
+                    mp3Info.setAlbum(album);
+                    mp3Info.setDisplayName(displayName);
+                    mp3Info.setAlbumId(albumId);
+                    mp3Info.setDuration(duration);
+                    mp3Info.setSize(size);
+                    mp3Info.setUrl(url);
+                    mp3Infos.add(mp3Info);
+                }
+            }
         }else{
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToNext();
@@ -117,7 +151,22 @@ public class PlayListUnit {
         }
         return mp3list;
     }
+    public static String strToDateLong(String sformat) {
+        long time=Integer.valueOf(sformat);
+        Date date=new Date(time);
+        String strs="";
+        try {
+            //yyyy表示年MM表示月dd表示日
+            //yyyy-MM-dd是日期的格式，比如2015-12-12如果你要得到2015年12月12日就换成yyyy年MM月dd日
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            //进行格式化
+            strs=sdf.format(date);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strs;
+    }
     /**
      * 格式化时间，将毫秒转换为分:秒格式
      * @param time

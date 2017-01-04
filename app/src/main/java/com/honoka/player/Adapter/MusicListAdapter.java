@@ -33,6 +33,7 @@ public class MusicListAdapter extends BaseAdapter {
     private Context context;
 
 
+
     /**
      * 构造函数
      */
@@ -86,7 +87,12 @@ public class MusicListAdapter extends BaseAdapter {
                 .build();
         if (bitmap != null){
             String uri=PlayListUnit.Url(mp3Info.getId());
-            ImageLoader.getInstance().displayImage(uri,viewHolder.albumImage,options); //显示专辑封面
+            if (uri!=null){
+                ImageLoader.getInstance().displayImage(uri,viewHolder.albumImage,options); //显示专辑封面
+            }else{
+                viewHolder.albumImage.setImageBitmap(bitmap);
+            }
+
         }
 
         return convertView;

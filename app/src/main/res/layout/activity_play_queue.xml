@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/play_queue_layout">
+    android:id="@+id/play_queue_layout"
+    android:theme="@android:style/ThemeOverlay.Material.Dark">
 
     <ListView
         android:id="@+id/lv_play_queue"

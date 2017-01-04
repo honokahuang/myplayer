@@ -10,4 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/playlist_main"/>
+    <TextView
+        android:id="@+id/emptylist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:text="还没有歌曲在播放列表中"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

@@ -36,6 +36,7 @@ public class AddPlayListActivity extends BaseActivity{
             public void onClick(View v) {
                 EditText playlist= (EditText) findViewById(R.id.playlist_name);
                 addnewPlaylist(AddPlayListActivity.this,playlist.getText().toString());
+                setResult(1);
                 finish();
             }
         });

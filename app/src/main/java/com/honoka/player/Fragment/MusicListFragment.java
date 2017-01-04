@@ -1,10 +1,17 @@
 package com.honoka.player.Fragment;
 
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.honoka.player.Activity.AddPlayListActivity;
 import com.honoka.player.Activity.AlbumListActivity;
@@ -39,10 +47,27 @@ public class MusicListFragment extends ListFragment {
     private ListView mplaylist; // 音乐列表
     private List<PlayListInfo> playListInfoLists = null;
     PlayListAdapter listAdapter; // 改为自定义列表适配器
-   /* public static MusicListFragment newInstance(int i){
-        MusicListFragment fragment=new MusicListFragment();
-        return fragment;
-    }*/
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        PlayListInfo playListInfo= playListInfoLists.get(position);
+                Intent intent = new Intent (getActivity(),PlayListInfoActivity.class);
+                intent.putExtra("playlist_id",String.valueOf(playListInfo.getPlaylistid()));
+                intent.putExtra("playlist_name",playListInfo.getPlaylistname());
+                startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1){
+            mplaylist= (ListView) view.findViewById(android.R.id.list);
+            playListInfoLists= MyPlayListUnit.getPlayListInfo(getActivity());
+            listAdapter=new PlayListAdapter(this.getActivity(),playListInfoLists);
+            mplaylist.deferNotifyDataSetChanged();
+            mplaylist.setAdapter(listAdapter);
+        }
+    }
 
     @Nullable
     @Override
@@ -57,7 +82,7 @@ public class MusicListFragment extends ListFragment {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getActivity(), AddPlayListActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,0);
                 }
             });
             localmusic.setOnClickListener(new View.OnClickListener() {
@@ -91,21 +116,28 @@ public class MusicListFragment extends ListFragment {
         playListInfoLists= MyPlayListUnit.getPlayListInfo(getActivity());
         listAdapter=new PlayListAdapter(this.getActivity(),playListInfoLists);
         mplaylist.setAdapter(listAdapter);
-        mplaylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PlayListInfo playListInfo= playListInfoLists.get(position);
-                Intent intent = new Intent (getActivity(),PlayListInfoActivity.class);
-/*                intent.putExtra("playlist_id",String.valueOf(playListInfo.getPlaylistid()));
-                intent.putExtra("playlist_name",playListInfo.getPlaylistname());*/
-                startActivity(intent);
-
-            }
-        });
         mplaylist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return false;
+                final PlayListInfo playListInfo= playListInfoLists.get(position);
+                //定义AlertDialog.Builder对象，当长按列表项的时候弹出确认删除对话框
+                final AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+                builder.setTitle("提示");
+                builder.setMessage("确定删除"+playListInfo.getPlaylistname()+"这个播放列表？");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reemove_Playlist(getActivity(),playListInfo.getPlaylistid(),playListInfo.getPlaylistname());
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+                return true;
             }
         });
 
@@ -118,5 +150,11 @@ public class MusicListFragment extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+    public void reemove_Playlist(Context context,long playlist_id,String playlist_name){
+        ContentResolver resolver = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Audio.Playlists._ID,playlist_id);
+        resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,MediaStore.Audio.Playlists._ID + "='" + playlist_id + "'",null);
     }
 }

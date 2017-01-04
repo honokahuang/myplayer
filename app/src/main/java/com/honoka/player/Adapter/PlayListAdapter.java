@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.honoka.player.Domain.AlbumInfo;
 import com.honoka.player.Domain.PlayListInfo;
 import com.honoka.player.R;
+import com.honoka.player.Utils.PlayListUnit;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class PlayListAdapter extends BaseAdapter {
         }
         playListInfo=playListInfos.get(i);
         viewHolder.playlistname.setText(playListInfo.getPlaylistname());
-        /*viewHolder.playlistadded.setText(playListInfo.getPlaylistadded());*/
+       /* viewHolder.playlistadded.setText(PlayListUnit.strToDateLong(playListInfo.getPlaylistadded()));*/
         return view;
     }
     public class ViewHolder{

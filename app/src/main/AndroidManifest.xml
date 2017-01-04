@@ -28,6 +28,7 @@
         <activity android:name=".Activity.AlbumInfoActivity" />
         <activity android:name=".Activity.LocalListActivity" />
         <activity android:name=".Activity.AddPlayListActivity"/>
+        <activity android:name=".Activity.PlayListInfoActivity"/>
         <activity
             android:screenOrientation="portrait"
             android:name=".Activity.MainHomeActivity"

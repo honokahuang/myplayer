@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -25,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +48,16 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.honoka.player.Adapter.PlayListAdapter;
 import com.honoka.player.Base.BaseActivity;
 import com.honoka.player.Custom.LrcView;
 import com.honoka.player.Custom.TitleBar;
 import com.honoka.player.Domain.AppConstant;
+import com.honoka.player.Domain.PlayListInfo;
 import com.honoka.player.R;
 import com.honoka.player.Domain.Mp3Info;
 import com.honoka.player.Utils.ImageUtil;
+import com.honoka.player.Utils.MyPlayListUnit;
 import com.honoka.player.Utils.PlayListUnit;
 
 import java.util.HashMap;
@@ -128,6 +133,7 @@ public class PlayActivity extends BaseActivity {
             repeatState=isNoneRepeat;
         }
         setbar(title,artist);//设置titlebar
+        settitleright();
         setfindViewById();
         setViewOnclickListener();
         music_progressBar.setProgress(currentTime);
@@ -372,11 +378,18 @@ public class PlayActivity extends BaseActivity {
         List<HashMap<String,String>> queues = PlayListUnit.getMusicMaps(mp3Infos);
         SimpleAdapter adapter=new SimpleAdapter(this,queues,R.layout.activity_play_queue_item,new String[]{"title","Artist","duration"},new int[]{R.id.music_title,R.id.music_Artist,R.id.music_duration});
         queuelist.setAdapter(adapter);
-
         AlertDialog.Builder builder;
         final AlertDialog dialog;
         builder=new AlertDialog.Builder(this);
+        builder.setTitle("正在播放");
         dialog=builder.create();
+        Window window=dialog.getWindow();
+        WindowManager.LayoutParams lp=window.getAttributes();
+        window.setGravity(Gravity.LEFT | Gravity.TOP);
+        lp.alpha=0.9f;
+        lp.width = 300;
+        lp.height = 600;
+        window.setAttributes(lp);
         dialog.setView(playQueueLayout);
         dialog.show();
 
@@ -549,20 +562,68 @@ public class PlayActivity extends BaseActivity {
         final TitleBar titleBar = (TitleBar) findViewById(R.id.title_bar);
         titleBar.setTitle(retitle+"\n"+reartist);
         titleBar.setBackgroundColor(Color.parseColor("#00000000"));
+
     }
 
-    public void addTrackToPlaylist(Context context, String audio_id,
-                                   long playlist_id, int pos) {
-        Uri newuri = MediaStore.Audio.Playlists.Members.getContentUri(
-                "external", playlist_id);
+    public void addTrackToPlaylist(Context context, long audio_id, long playlist_id, int pos) {
+        Uri newuri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlist_id);
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
         values.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, pos);
         values.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audio_id);
-        values.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID,
-                playlist_id);
+        values.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlist_id);
         resolver.insert(newuri, values);
 
+    }
+    private void settitleright(){
+        final TitleBar titleBar = (TitleBar) findViewById(R.id.title_bar);
+        mCollectView = (ImageView) titleBar.addAction(new TitleBar.ImageAction(android.R.drawable.ic_input_add) {
+            @Override
+            public void performAction(View view) {
+                showplaylist();
+            }
+        });
+    }
+    public void showplaylist(){
+        //这是设置paly_queue按钮
+        LayoutInflater layoutInflater= (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View playQueueLayout = layoutInflater.inflate(R.layout.activity_play_queue,(ViewGroup)findViewById(R.id.play_queue_layout));
+        ListView queuelist = (ListView) playQueueLayout.findViewById(R.id.lv_play_queue);
+        final List<PlayListInfo> playListInfoLists= MyPlayListUnit.getPlayListInfo(this);
+        PlayListAdapter listAdapter=new PlayListAdapter(this,playListInfoLists);
+        queuelist.setAdapter(listAdapter);
+        AlertDialog.Builder builder;
+        final AlertDialog dialog;
+        builder=new AlertDialog.Builder(this);
+        builder.setTitle("请选择需要添加到的播放列表！");
+        builder.setNegativeButton("添加到新的播放列表", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent= new Intent(PlayActivity.this,AddPlayListActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog=builder.create();
+        dialog.setView(playQueueLayout);
+        dialog.show();
+        queuelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (mp3Infos != null) {
+                    Mp3Info mp3Info = mp3Infos.get(listPosition);
+                    playListInfoLists.get(i);
+                    addTrackToPlaylist(getApplicationContext(),mp3Info.getId(),playListInfoLists.get(i).getPlaylistid(),0);
+                    dialog.cancel();
+
+                }
+            }
+        });
     }
 
 }

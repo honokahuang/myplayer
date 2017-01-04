@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants">
+    >
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -132,5 +132,12 @@
         android:layout_height="match_parent"
         android:id="@android:id/list"
       />
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:text="还没有播放列表，请在右上角添加播放列表！"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
