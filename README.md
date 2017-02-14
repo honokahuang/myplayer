@@ -5,3 +5,4 @@
 ####3.实现了播放列表的功能
 ####4.实现了在notification以及在notification中控制播放状态
 ####5.实现了后台播放
+####6.使用了loaderimage优化图片加载
