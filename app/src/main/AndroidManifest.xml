@@ -36,13 +36,14 @@
             android:label="@string/title_activity_main_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".Activity.MainHome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service android:name=".Service.PlayService">
             <intent-filter>
                 <action android:name="com.honoka.media.MUSIC_SERVICE" />
